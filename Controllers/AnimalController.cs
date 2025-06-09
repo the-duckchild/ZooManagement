@@ -18,7 +18,7 @@ public class AnimalController : ControllerBase
     }
 
     [HttpGet, Route("GetAnimalById")]
-    public IEnumerable<Animal> AnimalById([FromRoute] int urlId)
+    public IEnumerable<Animal> AnimalById(int urlId)
     {
         return _context.Animals.Where(b => b.Id == urlId).ToList();
     }
