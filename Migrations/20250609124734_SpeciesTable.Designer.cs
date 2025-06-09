@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Zoo.Migrations
 {
     [DbContext(typeof(ZooDBContext))]
-    partial class ZooDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250609124734_SpeciesTable")]
+    partial class SpeciesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -22,13 +25,16 @@ namespace Zoo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ClassificationId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("DateofAcquisition")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("EnclosureId")
+                    b.Property<int>("EnclosureId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -41,23 +47,7 @@ namespace Zoo.Migrations
 
                     b.HasIndex("EnclosureId");
 
-                    b.HasIndex("SpeciesId");
-
                     b.ToTable("Animals");
-                });
-
-            modelBuilder.Entity("Classification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Classifications");
                 });
 
             modelBuilder.Entity("Enclosure", b =>
@@ -77,25 +67,6 @@ namespace Zoo.Migrations
                     b.ToTable("Enclosures");
                 });
 
-            modelBuilder.Entity("Species", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClassificationId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassificationId");
-
-                    b.ToTable("species");
-                });
-
             modelBuilder.Entity("Zookeeper", b =>
                 {
                     b.Property<int>("Id")
@@ -112,30 +83,11 @@ namespace Zoo.Migrations
 
             modelBuilder.Entity("Animal", b =>
                 {
-                    b.HasOne("Enclosure", "Enclosure")
+                    b.HasOne("Enclosure", null)
                         .WithMany("Animals")
-                        .HasForeignKey("EnclosureId");
-
-                    b.HasOne("Species", "Species")
-                        .WithMany()
-                        .HasForeignKey("SpeciesId")
+                        .HasForeignKey("EnclosureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Enclosure");
-
-                    b.Navigation("Species");
-                });
-
-            modelBuilder.Entity("Species", b =>
-                {
-                    b.HasOne("Classification", "Classification")
-                        .WithMany()
-                        .HasForeignKey("ClassificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classification");
                 });
 
             modelBuilder.Entity("Enclosure", b =>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Zoo.Migrations
 {
     [DbContext(typeof(ZooDBContext))]
-    partial class ZooDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250609135124_addForeignKeys2")]
+    partial class addForeignKeys2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -28,7 +31,7 @@ namespace Zoo.Migrations
                     b.Property<DateOnly>("DateofAcquisition")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("EnclosureId")
+                    b.Property<int>("EnclosureId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -112,17 +115,17 @@ namespace Zoo.Migrations
 
             modelBuilder.Entity("Animal", b =>
                 {
-                    b.HasOne("Enclosure", "Enclosure")
+                    b.HasOne("Enclosure", null)
                         .WithMany("Animals")
-                        .HasForeignKey("EnclosureId");
+                        .HasForeignKey("EnclosureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Species", "Species")
                         .WithMany()
                         .HasForeignKey("SpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Enclosure");
 
                     b.Navigation("Species");
                 });

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
 namespace Zoo.Controllers;
@@ -17,9 +18,34 @@ public class AnimalController : ControllerBase
         _context = zoodbcontext;
     }
 
-    [HttpGet, Route("GetAnimalById")]
-    public IEnumerable<Animal> AnimalById(int urlId)
+    [HttpGet, Route("/{Id}")]
+    public async Task<ActionResult<animalDTO>> AnimalById(int Id)
     {
-        return _context.Animals.Where(b => b.Id == urlId).ToList();
+        var selectedAnimal = await _context
+            .Animals.Include(a => a.Species)
+            .ThenInclude(s => s.Classification)
+            .Include(a => a.Enclosure)
+            .SingleAsync(a => a.Id == Id);
+
+        var selectedAnimalDetails = new animalDTO()
+        {
+            Name = selectedAnimal.Name,
+            DateOfBirth = selectedAnimal.DateOfBirth,
+            DateofAcquisition = selectedAnimal.DateofAcquisition,
+            ClassificationName = selectedAnimal.Species.Classification.Name,
+            SpeciesName = selectedAnimal.Species.Name,
+            EnclosureName = selectedAnimal.Enclosure.Name,
+        };
+
+        if (selectedAnimal == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return selectedAnimalDetails;
+        }
     }
 }
+
+public interface IHttpActionResult { }
