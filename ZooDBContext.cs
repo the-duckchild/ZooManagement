@@ -1,7 +1,6 @@
 //using Bookish.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
-
+using Microsoft.EntityFrameworkCore;
 
 public class ZooDBContext : DbContext
 {
@@ -10,7 +9,7 @@ public class ZooDBContext : DbContext
     public DbSet<Zookeeper> Zookeepers { get; set; }
     public DbSet<Enclosure> Enclosures { get; set; }
     protected readonly IConfiguration _Configuration;
-    
+
     /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,17 +30,13 @@ public class ZooDBContext : DbContext
         }
         */
 
-
     public ZooDBContext(IConfiguration configuration)
     {
-       _Configuration = configuration;
+        _Configuration = configuration;
     }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         options.UseSqlite(_Configuration.GetConnectionString("ZooDatabase"));
-    
-        }
-   
+    }
 }
-
-

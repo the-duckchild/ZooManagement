@@ -1,38 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace Zoo.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[Controller]")]
 public class AnimalController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
     private readonly ILogger<AnimalController> _logger;
-    private readonly SqliteConnection _Connection;
+    private readonly ZooDBContext _context;
 
-    public AnimalController(ILogger<AnimalController> logger, SqliteConnection connection)
+    public AnimalController(ILogger<AnimalController> logger, ZooDBContext zoodbcontext)
     {
         _logger = logger;
-        _Connection = connection;
+        _context = zoodbcontext;
     }
 
-    [HttpGet(Name = "GetAnimalById")]
-    public IEnumerable<Animal> Get([FromRoute] int urlId)
-    {        
-
-        return Enumerable.Range(1, 5).Select(index => new Animal
-        {
-            Name =
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+    [HttpGet, Route("GetAnimalById")]
+    public IEnumerable<Animal> AnimalById([FromRoute] int urlId)
+    {
+        return _context.Animals.Where(b => b.Id == urlId).ToList();
     }
-    
 }

@@ -3629,11 +3629,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\April Bootcamp\\Zoo Management\\Zoo\\Zoo\\Zoo.csproj",
+      "projectUniqueName": "C:\\April Bootcamp\\Zoo Management 2\\Zoo.csproj",
       "projectName": "Zoo",
-      "projectPath": "C:\\April Bootcamp\\Zoo Management\\Zoo\\Zoo\\Zoo.csproj",
+      "projectPath": "C:\\April Bootcamp\\Zoo Management 2\\Zoo.csproj",
       "packagesPath": "C:\\Users\\enovo\\.nuget\\packages\\",
-      "outputPath": "C:\\April Bootcamp\\Zoo Management\\Zoo\\Zoo\\obj\\",
+      "outputPath": "C:\\April Bootcamp\\Zoo Management 2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\enovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
