@@ -4,10 +4,9 @@ public class SeedData
 {
     public static void GenerateSeedData(ZooDBContext context)
     {
-        //"en_US"
-        var animalId=0;
+        var animalId = 0;
         var animalFaker = new Faker<Animal>()
-            //.RuleFor(a => a.Id, _ => animalId++)
+            .RuleFor(a => a.Id, _ => animalId++)
             .RuleFor(a => a.Name, f => f.Name.FirstName())
             .RuleFor(a => a.SpeciesId, f => f.Random.Number(1, 9))
             .RuleFor(
@@ -17,7 +16,6 @@ public class SeedData
             .RuleFor(
                 a => a.DateOfBirth,
                 f => f.Date.BetweenDateOnly(new DateOnly(2020, 1, 1), new DateOnly(2022, 1, 1))
-                    
             )
             .RuleFor(a => a.EnclosureId, f => f.Random.Number(1, 5));
 
