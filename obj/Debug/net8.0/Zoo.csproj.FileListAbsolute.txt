@@ -316,3 +316,5 @@ C:\April Bootcamp\Zoo Management 2\obj\Debug\net8.0\scopedcss\bundle\Zoo.styles.
 C:\April Bootcamp\Zoo Management 2\obj\Debug\net8.0\Zoo.csproj.Up2Date
 C:\April Bootcamp\Zoo Management 2\obj\Debug\net8.0\Zoo.genruntimeconfig.cache
 C:\April Bootcamp\Zoo Management 2\obj\Debug\net8.0\ref\Zoo.dll
+C:\April Bootcamp\Zoo Management 2\bin\Debug\net8.0\Bogus.dll
+C:\April Bootcamp\Zoo Management 2\bin\Debug\net8.0\Newtonsoft.Json.dll

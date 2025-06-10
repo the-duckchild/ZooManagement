@@ -1,3 +1,4 @@
+using Bogus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -73,10 +74,17 @@ public class AnimalController : ControllerBase
         {
             return ValidationProblem("Acquired Date is before Birth Date");
         }
-        if (Birthday>DateOnly.FromDateTime(DateTime.Now) || AcquiredDate > DateOnly.FromDateTime(DateTime.Now))
+        if (
+            Birthday > DateOnly.FromDateTime(DateTime.Now)
+            || AcquiredDate > DateOnly.FromDateTime(DateTime.Now)
+        )
         {
             return ValidationProblem("Birthday or Acquired Date is in the future.");
         }
+        /*
+        Enclosure enclosure = _context.Enclosures.Find(enclosureId);
+        if (enclosure != null && enclosure.Capacity)
+        */
         _context.Animals.Add(
             new Animal
             {
@@ -117,4 +125,35 @@ public class AnimalController : ControllerBase
 
         return selectedAnimalTypes;
     }
+
+    // public void GenerateSeedData()
+    // {
+    //     int largestKey = _context.Set<Animal>().Max(e => e.Id);
+
+    //     var animalId = largestKey + 1;
+    //     var animalFaker = new Faker<Animal>()
+    //         .RuleFor(a => a.Id, _ => animalId++)
+    //         .RuleFor(a => a.Name, f => f.Name.FirstName())
+    //         .RuleFor(a => a.SpeciesId, f => f.Random.Number(1, 9))
+    //         .RuleFor(
+    //             a => a.DateofAcquisition,
+    //             f =>
+    //                 DateOnly.FromDateTime(
+    //                     f.Date.Between(new DateTime(2024, 1, 1), new DateTime(2025, 1, 1))
+    //                 )
+    //         )
+    //         .RuleFor(
+    //             a => a.DateOfBirth,
+    //             f =>
+    //                 DateOnly.FromDateTime(
+    //                     f.Date.Between(new DateTime(2020, 1, 1), new DateTime(2023, 1, 1))
+    //                 )
+    //         )
+    //         .RuleFor(a => a.EnclosureId, f => f.Random.Number(1, 5));
+
+    //     var fakeAnimals = animalFaker.Generate(100);
+    //     _context.Add(fakeAnimals);
+    //     _context.SaveChanges();
+    // }
+
 }

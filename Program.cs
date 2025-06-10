@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Zoo.Controllers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +20,11 @@ using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<ZooDBContext>();
     context.Database.Migrate();
+    if (!context.Animals.Any())
+    {
+        SeedData.GenerateSeedData(context);
+    }
 }
-;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

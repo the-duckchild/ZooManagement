@@ -8,12 +8,9 @@ public class ZooDBContext : DbContext
     public DbSet<Animal> Animals { get; set; }
     public DbSet<Zookeeper> Zookeepers { get; set; }
     public DbSet<Enclosure> Enclosures { get; set; }
-
     public DbSet<Classification> Classifications { get; set; }
-
     public DbSet<Species> species { get; set; }
     protected readonly IConfiguration _Configuration;
-
 
     public ZooDBContext(IConfiguration configuration)
     {

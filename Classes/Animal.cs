@@ -1,3 +1,4 @@
+using Bogus;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class Animal
