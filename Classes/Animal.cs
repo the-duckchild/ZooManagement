@@ -32,3 +32,10 @@ public class animalDTO
 
     public string? EnclosureName { get; set; }
 }
+
+public class animalTypes
+{
+    public string? SpeciesName { get; set; }
+
+    public string? ClassificationName { get; set; }
+}

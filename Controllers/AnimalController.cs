@@ -87,6 +87,31 @@ public class AnimalController : ControllerBase
         _context.SaveChanges();
         return Accepted();
     }
-}
 
-public interface IHttpActionResult { }
+    [HttpGet, Route("/AnimalList")]
+    public async Task<List<animalTypes?>> ListAnimalTypes()
+    {
+        var AnimalList = await _context
+            .Animals.Include(a => a.Species)
+            .ThenInclude(s => s.Classification)
+            .ToListAsync();
+
+        var selectedAnimalTypes = AnimalList
+            .GroupBy(p => p.SpeciesId)
+            .Select(g =>
+            {
+                var firstAnimal = g.FirstOrDefault();
+                if (firstAnimal == null)
+                    return null;
+                return new animalTypes
+                {
+                    ClassificationName = firstAnimal.Species?.Classification?.Name,
+                    SpeciesName = firstAnimal.Species?.Name,
+                };
+            })
+            .Where(x => x != null)
+            .ToList();
+
+        return selectedAnimalTypes;
+    }
+}
