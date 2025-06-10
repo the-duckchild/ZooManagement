@@ -73,7 +73,10 @@ public class AnimalController : ControllerBase
         {
             return ValidationProblem("Acquired Date is before Birth Date");
         }
-
+        if (Birthday>DateOnly.FromDateTime(DateTime.Now) || AcquiredDate > DateOnly.FromDateTime(DateTime.Now))
+        {
+            return ValidationProblem("Birthday or Acquired Date is in the future.");
+        }
         _context.Animals.Add(
             new Animal
             {
