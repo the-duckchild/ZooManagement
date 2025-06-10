@@ -4,5 +4,5 @@ public class Species
     public string? Name { get; set; }
     public required int ClassificationId { get; set; }
 
-    public Classification? Classification { get; set; }
+    public required Classification? Classification { get; set; }
 }

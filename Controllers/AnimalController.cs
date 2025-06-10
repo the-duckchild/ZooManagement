@@ -21,6 +21,12 @@ public class AnimalController : ControllerBase
     [HttpGet, Route("/{Id}")]
     public async Task<ActionResult<animalDTO>> AnimalById(int Id)
     {
+        var idCheck = _context.Animals.Any(a => a.Id == Id);
+        if (idCheck == false)
+        {
+            return NotFound();
+        }
+
         var selectedAnimal = await _context
             .Animals.Include(a => a.Species)
             .ThenInclude(s => s.Classification)
@@ -32,19 +38,54 @@ public class AnimalController : ControllerBase
             Name = selectedAnimal.Name,
             DateOfBirth = selectedAnimal.DateOfBirth,
             DateofAcquisition = selectedAnimal.DateofAcquisition,
-            ClassificationName = selectedAnimal.Species.Classification.Name,
-            SpeciesName = selectedAnimal.Species.Name,
-            EnclosureName = selectedAnimal.Enclosure.Name,
+            ClassificationName = selectedAnimal.Species?.Classification?.Name,
+            SpeciesName = selectedAnimal.Species?.Name,
+            EnclosureName = selectedAnimal.Enclosure?.Name,
         };
 
-        if (selectedAnimal == null)
+        return selectedAnimalDetails;
+    }
+
+    [HttpPost, Route("/AddAnimal/")]
+    public IActionResult AddAnimal(
+        string name,
+        int speciesId,
+        DateOnly Birthday,
+        DateOnly AcquiredDate,
+        int enclosureId
+    )
+    {
+        if (
+            !_context.species.Any(a => a.Id == speciesId)
+            || !_context.Enclosures.Any(b => b.Id == enclosureId)
+        )
         {
-            return NotFound();
+            return ValidationProblem("Species and/or Enclosure not found.");
         }
         else
         {
-            return selectedAnimalDetails;
+            if (name == null || Birthday == DateOnly.MinValue || AcquiredDate == DateOnly.MinValue)
+            {
+                return ValidationProblem("Name/Date of Birth/Date of Acquistion is/are null.");
+            }
         }
+        if (Birthday > AcquiredDate)
+        {
+            return ValidationProblem("Acquired Date is before Birth Date");
+        }
+
+        _context.Animals.Add(
+            new Animal
+            {
+                Name = name,
+                SpeciesId = speciesId,
+                DateofAcquisition = AcquiredDate,
+                DateOfBirth = Birthday,
+                EnclosureId = enclosureId,
+            }
+        );
+        _context.SaveChanges();
+        return Accepted();
     }
 }
 
