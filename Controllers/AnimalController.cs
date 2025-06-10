@@ -1,3 +1,4 @@
+using System.IO.Pipes;
 using Bogus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
@@ -49,34 +50,39 @@ public class AnimalController : ControllerBase
 
     [HttpPost, Route("/AddAnimal/")]
     public IActionResult AddAnimal(
-        string name,
-        int speciesId,
-        DateOnly Birthday,
-        DateOnly AcquiredDate,
-        int enclosureId
+        [FromBody] AddAnimal animal
+    // string name,
+    // int speciesId,
+    // DateOnly Birthday,
+    // DateOnly AcquiredDate,
+    // int enclosureId
     )
     {
         if (
-            !_context.species.Any(a => a.Id == speciesId)
-            || !_context.Enclosures.Any(b => b.Id == enclosureId)
+            !_context.species.Any(a => a.Id == animal.SpeciesId)
+            || !_context.Animals.Any(b => b.Id == animal.EnclosureId)
         )
         {
             return ValidationProblem("Species and/or Enclosure not found.");
         }
         else
         {
-            if (name == null || Birthday == DateOnly.MinValue || AcquiredDate == DateOnly.MinValue)
+            if (
+                animal.Name == null
+                || animal.DateOfBirth == DateOnly.MinValue
+                || animal.DateofAcquisition == DateOnly.MinValue
+            )
             {
                 return ValidationProblem("Name/Date of Birth/Date of Acquistion is/are null.");
             }
         }
-        if (Birthday > AcquiredDate)
+        if (animal.DateOfBirth > animal.DateofAcquisition)
         {
             return ValidationProblem("Acquired Date is before Birth Date");
         }
         if (
-            Birthday > DateOnly.FromDateTime(DateTime.Now)
-            || AcquiredDate > DateOnly.FromDateTime(DateTime.Now)
+            animal.DateOfBirth > DateOnly.FromDateTime(DateTime.Now)
+            || animal.DateofAcquisition > DateOnly.FromDateTime(DateTime.Now)
         )
         {
             return ValidationProblem("Birthday or Acquired Date is in the future.");
@@ -88,11 +94,11 @@ public class AnimalController : ControllerBase
         _context.Animals.Add(
             new Animal
             {
-                Name = name,
-                SpeciesId = speciesId,
-                DateofAcquisition = AcquiredDate,
-                DateOfBirth = Birthday,
-                EnclosureId = enclosureId,
+                Name = animal.Name,
+                SpeciesId = animal.SpeciesId,
+                DateofAcquisition = animal.DateofAcquisition,
+                DateOfBirth = animal.DateOfBirth,
+                EnclosureId = animal.EnclosureId,
             }
         );
         _context.SaveChanges();
@@ -125,5 +131,4 @@ public class AnimalController : ControllerBase
 
         return selectedAnimalTypes;
     }
-
 }
